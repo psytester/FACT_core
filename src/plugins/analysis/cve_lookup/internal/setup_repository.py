@@ -68,7 +68,9 @@ def update_cpe(cpe_extract_path: str):
 
 def import_cpe(cpe_extract_path: str):
     if table_exists(table_name='cpe_table'):
-        raise CveLookupException('CPE table does already exist')
+        #fix corrupted DB due to low disk space by doing DROP table instead of raise error
+        drop_table(table_name='cpe_table')
+        #raise CveLookupException('CPE table does already exist')
     create(query='create_cpe_table', table_name='cpe_table')
     insert_into(query='insert_cpe', table_name='cpe_table', input_data=setup_cpe_table(get_cpe_content(path=cpe_extract_path)))
 
